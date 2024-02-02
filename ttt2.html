@@ -2,20 +2,8 @@
 <html lang="en">
 <head>
     <title>Assignment 2: Tic Tac Toe</title>
-
-    <script>
-        const NUM_SQUARES = 9;
-for (i=0; i<NUM_SQUARES; i++)
-{
-    id = "sq"+i;
-    document.write( "<div class='square' id='" + id + "'></div>" );
-}
-
-    </script>
-
 <style>
-
-    .board {
+    .square {
         width: 150px;
         height: 150px;
         display: grid;
@@ -134,7 +122,7 @@ for (i=0; i<NUM_SQUARES; i++)
 
 </div> 
 
-    <div class="board">
+    <div class="square">
 
         <div class="box">X</div>
         <div class="box">&nbsp;</div>
@@ -161,6 +149,17 @@ for (i=0; i<NUM_SQUARES; i++)
 
 </div>
 
+<script>
+    console.log("JS Loaded");
+ 
+   const NUM_SQUARES = 9;
 
+    for (i=0; i<NUM_SQUARES; i++)
+    {
+        id = "sq"+i;
+        document.write( "<div class='square' id='" + id + "'></div>" );
+       
+    }
+</script>
 </body>
 </html>
