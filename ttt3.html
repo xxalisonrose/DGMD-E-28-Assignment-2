@@ -25,6 +25,7 @@
             width: 100%;
             height: 100%;
             padding: 7px;
+            font-size: xx-large;
         }
 
         .square:hover {
@@ -130,12 +131,23 @@
 
 <script>
     console.log("JS Loaded");
-
+    // Provided JS Code
     const NUM_SQUARES = 9;
     for (let i = 0; i < NUM_SQUARES; i++) {
         let id = "sq" + i;
         document.querySelector('.board').innerHTML += "<div class='square' id='" + id + "'></div>";
-    }
+    };
+
+    // Click the square and an X will appear
+    document.querySelectorAll('.square').forEach((square, index) => {
+        square.addEventListener('click' , () => {
+            square.textContent = 'X';
+    // An alert will popup with the box number, starting with 0        
+            const location = index;
+            const message = `Square number: ${location}`;
+            alert(message);
+        });
+    });
 </script>
 </body>
 </html>
