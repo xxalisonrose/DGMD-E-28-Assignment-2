@@ -103,6 +103,19 @@
         a:active {
             color: coral;
         }
+
+        #button {
+        background-color: coral;
+        border: none;
+        color: darkblue;
+        padding: 5px;
+        margin-left: 45px;
+        margin-top: 10px;
+        width: 150px;
+        text-align: center;
+        cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -119,10 +132,12 @@
 
 <div class="board"></div>
 
+<button id="button" onclick="clearBoard()">Start Game</button>
+
 <div class="win">
     <p>How to Win? 
     <br>
-    ---- </p>
+    <div id="winCheck"></div></p>
 </div>
 
 <div class="foot">
@@ -144,12 +159,13 @@
 
     // Decide if X or O goes first
     function firstPlayer() {
+
     // Generate either 0 or 1. If it is less than 0.5, 'x' goes first
     const randomNumber = Math.random();
-
     return randomNumber < 0.5 ? 'X' : 'O';
     }
 
+    // assign firstPlayer function to player
     var player = firstPlayer();
 
     // Get the div elements for turnX and turnO
@@ -173,22 +189,99 @@
         toggleTurn(); 
     });
 
+    
+
+
+    // initialize moves array
+    var moves = ['-','-','-','-','-','-','-','-','-'];
+
+
+
+// Check if X or O wins
+function checkWin() {
+    var winConditions = [
+    // Rows
+    moves[0] + moves[1] + moves[2],
+    moves[3] + moves[4] + moves[5],
+    moves[6] + moves[7] + moves[8],
+    // Columns
+    moves[0] + moves[3] + moves[6],
+    moves[1] + moves[4] + moves[7],
+    moves[2] + moves[5] + moves[8],
+    // Diagonals
+    moves[0] + moves[4] + moves[8], 
+    moves[2] + moves[4] + moves[6]
+];
+
+    for (let i = 0; i < winConditions.length; i++) {
+        if (winConditions[i] === "XXX") {
+            return "X wins!";
+        } else if (winConditions[i] === "OOO") {
+            return "O wins!";
+        }
+}
+}
+
+// Function to check for stalemate
+function checkStalemate() {
+    return !moves.includes('-') && !checkWin(); // No hyphens and no winner means stalemate
+}
+
     // Click the square and an X or O will appear depending on the turn
     function squareClick(event) {
     const square = event.target;
+    const squareIndex = parseInt(square.id.slice(2));
+
     if (square.textContent === '') {
         square.textContent = player;
-        square.removeEventListener('click', squareClickHandler);
+        square.removeEventListener('click', squareClick);
         // Update player to the next turn
         player = player === 'X' ? 'O' : 'X';
+        // Update moves array for the current move
+        moves[squareIndex] = square.textContent;
+        console.log(moves);
         // Call toggleTurn to run
         toggleTurn();
+
+        // Check for win or stalemate
+        const winCheck = document.getElementById("winCheck");
+        const winResult = checkWin();
+        const stalemateResult = checkStalemate();
+        if (winResult) {
+            winCheck.innerHTML = winResult;
+            // Stop the game when there's a winner
+            document.querySelectorAll('.square').forEach((square) => {
+                square.removeEventListener('click', squareClick);
+            });  
+        } else if (stalemateResult) {
+            winCheck.innerHTML = "Stalemate!";
+        }
     }
 }
 
 document.querySelectorAll('.square').forEach((square) => {
     square.addEventListener('click', squareClick);
 });
+
+// Clear Game and Restart
+function clearBoard() {
+    // Reset moves array
+    moves = ['-','-','-','-','-','-','-','-','-'];
+    // Clear the content of all squares and remove event listeners
+    document.querySelectorAll('.square').forEach((square) => {
+        square.textContent = '';
+        square.addEventListener('click', squareClick);
+    });
+
+    // Clear winner box
+    winCheck.innerHTML = "";
+
+    // Reset the turn indicator
+    player = firstPlayer();
+    toggleTurn();
+}
+
+
 
 
 </script>
