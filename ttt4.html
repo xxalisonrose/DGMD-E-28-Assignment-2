@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Assignment 2: Tic Tac Toe</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         .board {
             width: 200px;
@@ -66,13 +67,16 @@
 
         .turnX {
             background-color: teal;
-            padding: 5px;
         }
 
         .turnO {
             background-color: coral;
+        }
+
+        .blank {
             padding: 5px;
         }
+
 
         .win {
             margin-left: 50px;
@@ -107,8 +111,8 @@
     <div class="whosNext">
         <h2>Who's Turn Is It?</h2>
         <div class="turns">
-            <div class="turnX">X</div>
-            <div class="turnO">O</div>
+            <div id="turnX">X</div>
+            <div id="turnO">O</div>
         </div>
     </div>
 </div>
@@ -125,6 +129,7 @@
     <a href="ttt1.html">TTT1</a>
     <a href="ttt2.html">TTT2</a>
     <a href="ttt3.html">TTT3</a>
+    <a href="ttt4.html">TTT4</a>
 </div>
 
 <script>
@@ -136,16 +141,55 @@
         document.querySelector('.board').innerHTML += "<div class='square' id='" + id + "'></div>";
     };
 
-    // Click the square and an X will appear
-    document.querySelectorAll('.square').forEach((square, index) => {
-        square.addEventListener('click' , () => {
-            square.textContent = 'X';
-    // An alert will popup with the box number, starting with 0        
-            const location = index;
-            const message = `Square number: ${location}`;
-            alert(message);
-        });
+    // Decide if X or O goes first
+    function firstPlayer() {
+    // Generate either 0 or 1. If it is less than 0.5, 'x' goes first
+    const randomNumber = Math.random();
+
+    return randomNumber < 0.5 ? 'X' : 'O';
+    }
+
+    var player = firstPlayer();
+
+    // Get the div elements for turnX and turnO
+    function toggleTurn() {
+        console.log(player);
+
+        // Toggle indicator based on who's playing
+        if (player === 'X') {
+            $("#turnX, #turnO").addClass("blank");
+            $("#turnX").addClass("turnX");
+            $("#turnO").removeClass("turnO");
+        } else {
+            $("#turnX, #turnO").addClass("blank");
+            $("#turnO").addClass("turnO");
+            $("#turnX").removeClass("turnX"); 
+        }
+    }
+
+    // Call the function when the page is loaded
+    $(document).ready(function() {
+        toggleTurn(); 
     });
+
+    // Click the square and an X or O will appear depending on the turn
+    function squareClickHandler(event) {
+    const square = event.target;
+    if (square.textContent === '') {
+        square.textContent = player;
+        square.removeEventListener('click', squareClickHandler);
+        // Update player to the next turn
+        player = player === 'X' ? 'O' : 'X';
+        // Call toggleTurn to run
+        toggleTurn();
+    }
+}
+
+document.querySelectorAll('.square').forEach((square) => {
+    square.addEventListener('click', squareClickHandler);
+});
+
+
 </script>
 </body>
 </html>
